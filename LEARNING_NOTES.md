@@ -48,4 +48,31 @@ START → chat_node → END
 
 ---
 
+### 2026-02-16 (Update 2)
+**Topic:** Streamlit Frontend Integration with LangGraph
+**File:** `frontend.py`
+
+**Concepts Learned:**
+1. **Thread Configuration** - Using `thread_id` to identify unique conversation sessions
+2. **Streamlit Session State** - Managing UI state across page reruns
+3. **State Persistence Layers** - Understanding the difference between:
+   - Streamlit's `session_state` (UI state during browser session)
+   - LangGraph's checkpointer (conversation state across sessions)
+4. **Chat Interface** - Building conversational UI with Streamlit components
+
+**Key Takeaways:**
+- `thread_id` in CONFIG is how LangGraph identifies which conversation to load/save
+- Streamlit's session state is temporary (browser session only)
+- LangGraph's checkpointer provides true persistence across restarts
+- The two state management systems work together: UI state + conversation state
+
+**Implementation Status:**
+- ✅ Session state initialization
+- ✅ Message display loop
+- ✅ User input handling
+- ⏳ TODO: Integrate chatbot invocation with LangGraph
+- ⏳ TODO: Display AI responses
+
+---
+
 <!-- Future entries will be added here -->
