@@ -4,7 +4,7 @@ from langchain_core.messages import HumanMessage
 
 # Thread configuration for LangGraph's checkpointing system
 # The thread_id uniquely identifies this conversation session
-CONFIG = {'configurable': {'thread_id': 'chat_thread_1'}
+CONFIG = {'configurable': {'thread_id': 'chat_thread_1'}}
 
 # Initialize Streamlit session state for UI persistence
 # This maintains the message history during the current browser session
