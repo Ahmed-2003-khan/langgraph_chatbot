@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as str
 from langgraph_backend import chatbot
 from langchain_core.messages import HumanMessage
 
@@ -33,5 +33,6 @@ if user_input:
                 stream_mode="messages"
             )
         )
+
 
     st.session_state['message_history'].append({'role': 'assistant', 'content': ai_message})
