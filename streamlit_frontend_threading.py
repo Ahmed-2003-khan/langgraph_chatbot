@@ -16,6 +16,9 @@ CONFIG = {'configurable': {'thread_id': 'thread-1'}}
 if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
 
+if 'thread_id' not in st.session_state:
+    st.session_state['thread_id'] = generate_thread_id()
+
 st.sidebar.title('LangGraph Chatbot')
 
 st.sidebar.button('New Chat')
