@@ -1,6 +1,14 @@
 import streamlit as st
 from langgraph_backend import chatbot
 from langchain_core.messages import HumanMessage
+import uuid
+
+## Utility functions
+
+def generate_thread_id():
+    return str(uuid.uuid4())
+
+
 
 # st.session_state -> dict -> 
 CONFIG = {'configurable': {'thread_id': 'thread-1'}}
