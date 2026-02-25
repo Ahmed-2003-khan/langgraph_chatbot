@@ -8,6 +8,10 @@ import uuid
 def generate_thread_id():
     return str(uuid.uuid4())
 
+def reset_chat():
+    thread_id = generate_thread_id()
+    st.session_state['thread_id'] = thread_id
+    st.session_state['message_history'] = []
 
 
 # st.session_state -> dict ->
