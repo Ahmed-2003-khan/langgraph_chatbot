@@ -10,20 +10,22 @@ def generate_thread_id():
 
 
 
-# st.session_state -> dict -> 
-CONFIG = {'configurable': {'thread_id': st.session_state['thread_id']}}
+# st.session_state -> dict ->
+if 'thread_id' not in st.session_state:
+    st.session_state['thread_id'] = generate_thread_id()
 
 if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
 
-if 'thread_id' not in st.session_state:
-    st.session_state['thread_id'] = generate_thread_id()
+CONFIG = {'configurable': {'thread_id': st.session_state['thread_id']}}
 
 st.sidebar.title('LangGraph Chatbot')
 
 st.sidebar.button('New Chat')
 
 st.sidebar.header('My conversations')
+
+st.sidebar.text(st.session_state['thread_id'])
 
 # loading the conversation history
 for message in st.session_state['message_history']:
