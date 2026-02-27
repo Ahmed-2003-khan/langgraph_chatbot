@@ -188,4 +188,15 @@ session_state['thread_id']  →  CONFIG  →  LangGraph checkpointer
 
 ---
 
+### 2026-02-28 (Update 3)
+**Topic:** Reverse Slice for Newest-First Sidebar Ordering
+**File:** `streamlit_frontend_threading.py`
+
+**Concept Learned:**
+- **Python slice notation** `[start:stop:step]` — omitting start/stop with `step=-1` reverses any sequence
+- `chat_threads[::-1]` iterates the list backwards so the most recently added thread appears first
+- Non-destructive: the original list order in `session_state` is unchanged
+
+---
+
 <!-- Future entries will be added here -->
