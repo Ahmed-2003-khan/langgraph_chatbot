@@ -45,8 +45,6 @@ if st.sidebar.button('New Chat'):
 
 st.sidebar.header('My conversations')
 
-# [::-1] reverses the list using Python slice notation [start:stop:step]
-# step=-1 means iterate backwards → newest thread (appended last) appears first in sidebar
 for thread_id in st.session_state['chat_threads'][::-1]:
     if st.sidebar.button(str(thread_id)):
         messages = load_thread(thread_id)

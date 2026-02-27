@@ -199,4 +199,23 @@ session_state['thread_id']  →  CONFIG  →  LangGraph checkpointer
 
 ---
 
+### 2026-02-28 (Update 4)
+**Topic:** Persistent Checkpointing with SQLiteSaver
+**File:** `langgraph_database_backend.py`
+
+**Concepts Learned:**
+1. **SQLiteSaver vs InMemorySaver**:
+   - `InMemorySaver` → state lives in RAM, lost on every app restart
+   - `SqliteSaver` → state written to a `.db` file on disk, survives restarts
+2. **`sqlite3.connect()`** — creates the database connection that `SqliteSaver` wraps
+3. **`check_same_thread=False`** — required when multiple threads (e.g. Streamlit) share the same SQLite connection
+4. **`pip install langgraph-checkpoint-sqlite`** — separate package from core LangGraph
+
+**Key Takeaways:**
+- SQLite is the simplest step up from in-memory persistence — no server needed, just a file
+- For production use, `PostgresSaver` would be the next step (multi-user, concurrent access)
+- The graph definition stays identical — only the `checkpointer=` argument changes
+
+---
+
 <!-- Future entries will be added here -->
