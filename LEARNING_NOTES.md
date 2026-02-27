@@ -199,22 +199,23 @@ session_state['thread_id']  →  CONFIG  →  LangGraph checkpointer
 
 ---
 
-### 2026-02-28 (Update 4)
-**Topic:** Persistent Checkpointing with SQLiteSaver
+### 2026-02-28 (Update 5)
+**Topic:** Fixing and Running SqliteSaver — 3 Bugs Resolved
 **File:** `langgraph_database_backend.py`
 
-**Concepts Learned:**
-1. **SQLiteSaver vs InMemorySaver**:
-   - `InMemorySaver` → state lives in RAM, lost on every app restart
-   - `SqliteSaver` → state written to a `.db` file on disk, survives restarts
-2. **`sqlite3.connect()`** — creates the database connection that `SqliteSaver` wraps
-3. **`check_same_thread=False`** — required when multiple threads (e.g. Streamlit) share the same SQLite connection
-4. **`pip install langgraph-checkpoint-sqlite`** — separate package from core LangGraph
+**Bugs Fixed:**
 
-**Key Takeaways:**
-- SQLite is the simplest step up from in-memory persistence — no server needed, just a file
-- For production use, `PostgresSaver` would be the next step (multi-user, concurrent access)
-- The graph definition stays identical — only the `checkpointer=` argument changes
+| # | Error | Root Cause | Fix |
+|---|---|---|---|
+| 1 | `ImportError: cannot import name 'SQLiteSaver'` | Wrong casing — class is `SqliteSaver` not `SQLiteSaver` | `from langgraph.checkpoint.sqlite import SqliteSaver` |
+| 2 | `NameError: name 'HumanMessage' is not defined` | `HumanMessage` used in test but not imported | Added `from langchain_core.messages import HumanMessage` |
+| 3 | `SqliteSaver()` broken | `SqliteSaver` requires a `conn` argument (connection is mandatory) | `conn = sqlite3.connect('chatbot.db', check_same_thread=False)` then `SqliteSaver(conn=conn)` |
+
+**Concepts Solidified:**
+- `check_same_thread=False` — disables SQLite's single-thread restriction; needed for Streamlit/async
+- `database='chatbot.db'` — SQLite creates the file automatically if it doesn't exist
+- The response dict contains the FULL state: `{'messages': [HumanMessage(...), AIMessage(...)]}`
+- Test invocations in the backend file are a quick way to verify the graph works before building UI
 
 ---
 
