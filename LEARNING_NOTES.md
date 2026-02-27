@@ -219,4 +219,27 @@ session_state['thread_id']  →  CONFIG  →  LangGraph checkpointer
 
 ---
 
+### 2026-02-28 (Update 6)
+**Topic:** SQLite-Backed Frontend — `get_threads()` and Two More Bugs Fixed
+**Files:** `langgraph_database_backend.py`, `streamlit_frontend_database.py`
+
+**New Concept: `get_threads()`**
+- `checkpointer.list(None)` iterates every checkpoint row in the SQLite DB
+- Each checkpoint has `.config['configurable']['thread_id']`
+- Using `set()` first deduplicates — each conversation generates multiple checkpoints (one per invocation)
+- Convert back to `list()` so callers can use `.append()` and slicing
+
+**Key Upgrade Over InMemory Version:**
+- Conversations seeded from DB on app startup → sidebar shows past conversations even after restarts
+- `st.session_state['chat_threads'] = get_threads()` instead of `= []`
+
+**Bugs Fixed:**
+
+| # | Error | Root Cause | Fix |
+|---|---|---|---|
+| 1 | `AttributeError: 'set' object has no attribute 'append'` | `get_threads()` returned a raw `set`, but `add_thread()` used `.append()` | Added `return list(threads)` to convert before returning |
+| 2 | `KeyError: 'messages'` | `checkpointer.list()` returns ALL checkpoints including empty intermediate ones with no state yet | `.values.get('messages', [])` instead of `.values['messages']` |
+
+---
+
 <!-- Future entries will be added here -->
