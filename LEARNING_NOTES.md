@@ -160,4 +160,32 @@ session_state['thread_id']  →  CONFIG  →  LangGraph checkpointer
 
 ---
 
+### 2026-02-28 (Update 2)
+**Topic:** Loading Saved Conversations with `get_state()` + Message Format Conversion
+**File:** `streamlit_frontend_threading.py`
+
+**Concepts Learned:**
+1. **`chatbot.get_state(CONFIG)`** - Reads the saved checkpoint for a given `thread_id` without running the graph
+   - Returns a `StateSnapshot` object
+   - `.values` gives the full state dict (same schema as the graph)
+   - `.values['messages']` gives the full LangChain message list
+2. **LangChain Message Objects vs Streamlit Dicts** - Two different formats that must be bridged:
+   - LangGraph stores: `HumanMessage(content='...')`, `AIMessage(content='...')`
+   - Streamlit UI expects: `{'role': 'user', 'content': '...'}`, `{'role': 'assistant', 'content': '...'}`
+3. **`isinstance()` dispatch** - Pattern for type-checking and converting polymorphic objects
+4. **Clickable conversation switching** - Using sidebar buttons to load past conversations
+
+**Bugs Fixed Along the Way:**
+- ❌ **Bug 1:** `load_thread()` set `session_state` internally but forgot `return` → `messages` was `None` → `TypeError: 'NoneType' object is not iterable`
+- ✅ **Fix 1:** Changed function to `return` the messages list; caller handles assignment
+- ❌ **Bug 2:** Tried to render raw LangChain message objects with `message['role']` → `TypeError: 'HumanMessage' object is not subscriptable`
+- ✅ **Fix 2:** Added `isinstance()` conversion loop to map LangChain objects → plain dicts before storing in `session_state`
+
+**Key Takeaways:**
+- `get_state()` is how you READ from the checkpointer without invoking the graph
+- LangChain message objects are NOT dicts — always convert before using as dicts
+- Function responsibilities should be single: `load_thread()` fetches, caller assigns
+
+---
+
 <!-- Future entries will be added here -->
