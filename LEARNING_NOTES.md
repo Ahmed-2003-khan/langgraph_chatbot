@@ -131,4 +131,33 @@ Extract AI response → Display in UI → Save to session_state
 
 ---
 
+### 2026-02-28
+**Topic:** Multi-Conversation Management + Streaming Responses
+**File:** `streamlit_frontend_threading.py`
+
+**Concepts Learned:**
+1. **UUID Thread IDs** - Using `uuid.uuid4()` to generate unique conversation identifiers
+2. **Dynamic CONFIG** - Building CONFIG from `session_state` so "New Chat" actually creates a new LangGraph conversation
+3. **Multi-Conversation Sidebar** - Tracking all thread IDs in `chat_threads` list to power a conversation history panel
+4. **Streaming vs Invoke**:
+   - `chatbot.invoke()` → waits for full response, returns all at once
+   - `chatbot.stream(..., stream_mode="messages")` → yields `(message_chunk, metadata)` tuples incrementally
+5. **`st.write_stream()`** - Streamlit's built-in that consumes a generator and displays each chunk in real time (the "typing" effect)
+
+**Key Takeaways:**
+- A hardcoded `thread_id` like `'thread-1'` means every "New Chat" reuses the same LangGraph history — UUID fixes this
+- `session_state['chat_threads']` is the foundation of a ChatGPT-style conversation sidebar
+- `stream_mode="messages"` yields at the message level (one chunk per LLM token group)
+- The deduplication guard in `add_thread()` is needed because Streamlit reruns the full script on every interaction
+
+**Architecture Pattern:**
+```
+session_state['thread_id']  →  CONFIG  →  LangGraph checkpointer
+       ↑                                          ↓
+  reset_chat()                          Isolated conversation history
+  (new uuid)                            per thread_id
+```
+
+---
+
 <!-- Future entries will be added here -->
