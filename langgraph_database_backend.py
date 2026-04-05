@@ -32,12 +32,7 @@ graph.add_edge('chat_node', END)
 chatbot = graph.compile(checkpointer=checkpointer)
 
 def get_threads():
-    # checkpointer.list(None) iterates over ALL checkpoint rows in the SQLite DB
-    # Each 'thread' is a CheckpointTuple with a .config dict containing the thread_id
-    # We use a set() first to deduplicate — each conversation has multiple checkpoints
-    # (one per graph invocation), so raw list would contain duplicates
     threads = set()
     for thread in checkpointer.list(None):
         threads.add(thread.config['configurable']['thread_id'])
-    # Convert back to list so the caller can use list operations (append, [::-1], etc.)
     return list(threads)
